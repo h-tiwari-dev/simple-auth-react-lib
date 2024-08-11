@@ -17,6 +17,10 @@ dist-ssr
 !.vscode/extensions.json
 .idea
 .DS_Store
+# Ignore environment variable files
+.env
+.env.local
+.env.*.local
 *.suo
 *.ntvs*
 *.njsproj

@@ -1,10 +1,22 @@
+import { useGoogleLogin } from "@react-oauth/google";
 import { OAuthBtnInterface, OAuthType } from "./types";
 
 export const OAuthWithGoolgeBtn: React.FC<OAuthBtnInterface> = (props: { btnType: OAuthType }) => {
+    const login = useGoogleLogin({
+        onSuccess: async (codeResponse) => {
+            const tokenResponse = await fetch(`http://0.0.0.0:8080/api/v1/auth/google-callback?code=${codeResponse.code}`, {
+                method: 'get',
+            })
+            console.log("TOKEN RESPONSE:-", tokenResponse)
+        },
+        flow: "auth-code",
+    })
 
     return (
         <button
-            className="flex items-center bg-white border border-gray-300 rounded-lg shadow-md w-full my-2 px-6 py-2 text-sm font-medium text-gray-800 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+            className="flex items-center bg-white border border-gray-300 rounded-lg shadow-md w-full my-2 px-6 py-2 text-sm font-medium text-gray-800 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+            onClick={() => login()}
+        >
             <svg className="h-6 w-6 mr-2" xmlns="http://www.w3.org/2000/svg" href="http://www.w3.org/1999/xlink"
                 viewBox="-0.5 0 48 48" version="1.1">
 

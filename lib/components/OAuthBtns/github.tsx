@@ -3,7 +3,8 @@ import { OAuthBtnInterface, OAuthType } from "./types";
 export const OAuthWithGithubBtn: React.FC<OAuthBtnInterface> = (props: { btnType: OAuthType }) => {
     return (
         <button
-            className="flex items-center bg-white border border-gray-300 rounded-lg shadow-md w-full my-2 px-6 py-2 text-sm font-medium text-gray-800 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+            className="flex items-center bg-white border border-gray-300 rounded-lg shadow-md w-full my-2 px-6 py-2 text-sm font-medium text-gray-800 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+        >
             <svg className="h-6 w-6 mr-2" xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 73 73" version="1.1">
                 <g id="team-collaboration/version-control/github" stroke="none" stroke-width="1" fill="none"
