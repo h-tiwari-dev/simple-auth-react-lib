@@ -9,36 +9,42 @@ import {
 } from "../OAuthBtns";
 import { OAuthType } from "../OAuthBtns/types";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import axios from "axios";
 
 interface SignInFormInterface {
     email: string;
     password: string;
 }
 
-export const SignInForm: React.FC = () => {
+interface SignInFormProps {
+    callbackUrl: string
+}
+export const SignInForm: React.FC<SignInFormProps> = (props) => {
     const { register, handleSubmit, formState: { errors } } = useForm<SignInFormInterface>();
 
-    const signInUser = async (credentials: SignInFormInterface) => {
-        const response = await fetch('http://0.0.0.0:8080/api/v1/auth/sign-in', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(credentials),
-        });
-
-        if (!response.ok) {
-            throw new Error('Failed to sign in');
-        }
-
-        return response.json();
-    };
 
     const mutation = useMutation({
-        mutationFn: signInUser,
-        onSuccess: () => {
+        mutationFn: async (credentials: SignInFormInterface) => {
+            const response = await axios.post<{
+                "error"?: string,
+                "token": string,
+            }>('http://localhost:8080/api/v1/auth/sign-in', credentials, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (response.status !== 200 || response.data.error) {
+                throw new Error('Failed to create user');
+            }
+            return response.data;
+        },
+
+        onSuccess: (data) => {
             // Handle successful sign-in (e.g., redirect or show a success message)
-            console.log("Sign-in successful");
+            console.log("Sign-in successful", data.token);
+            localStorage.setItem("token", data.token)
+            window.location.href = window.location.origin + props.callbackUrl
         },
         onError: (error) => {
             // Handle error (e.g., show an error message)
@@ -94,20 +100,20 @@ export const SignInForm: React.FC = () => {
                         {errors.password && <span className="text-red-500">{errors.password.message}</span>}
                     </div>
                 </div>
-            </form>
-            <div className="mt-6">
-                <button className="p-2 w-full bg-gradient-to-t from-blue-600 to-blue-500 bg-[length:100%_100%] bg-[bottom] rounded-lg text-white shadow hover:bg-[length:100%_150%]">
-                    Sign In
-                </button>
-                <div className="mt-3 space-y-2">
-                    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_OAUTH_CLIENT}>
-                        <OAuthWithGoolgeBtn btnType={OAuthType.SignIn} />
-                    </GoogleOAuthProvider>;
-                    <OAuthWithAppleBtn btnType={OAuthType.SignIn} />
-                    <OAuthWithLinkedinBtn btnType={OAuthType.SignIn} />
-                    <OAuthWithGithubBtn btnType={OAuthType.SignIn} />
+                <div className="mt-6">
+                    <button className="p-2 w-full bg-gradient-to-t from-blue-600 to-blue-500 bg-[length:100%_100%] bg-[bottom] rounded-lg text-white shadow hover:bg-[length:100%_150%]">
+                        Sign In
+                    </button>
+                    <div className="mt-3 space-y-2">
+                        <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_OAUTH_CLIENT}>
+                            <OAuthWithGoolgeBtn btnType={OAuthType.SignIn} />
+                        </GoogleOAuthProvider>
+                        <OAuthWithAppleBtn btnType={OAuthType.SignIn} />
+                        <OAuthWithLinkedinBtn btnType={OAuthType.SignIn} />
+                        <OAuthWithGithubBtn btnType={OAuthType.SignIn} />
+                    </div>
                 </div>
-            </div>
+            </form>
             {/* Bottom link */}
             <div className="mt-6 text-center">
                 <a

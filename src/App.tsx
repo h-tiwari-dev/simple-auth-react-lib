@@ -1,9 +1,11 @@
-import { SignInPage, SignUpPage } from '../lib/main'
+import { useAuth } from '../lib/components/context/AuthContext'
 
 function App() {
+    const { authState: { user } } = useAuth();
+
     return (
         <>
-            <SignInPage />
+            User Data: {JSON.stringify(user)}
         </>
     )
 }

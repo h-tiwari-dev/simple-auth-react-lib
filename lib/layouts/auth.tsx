@@ -1,6 +1,3 @@
-// import Logo from "@/components/ui/logo";
-// import AuthBg from "@/public/images/auth-bg.svg";
-
 import RootLayout from "./root";
 import { getImageUrl } from "../helpers";
 
