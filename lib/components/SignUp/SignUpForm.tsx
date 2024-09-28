@@ -1,4 +1,7 @@
-import React, { FieldsetHTMLAttributes } from "react";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
+import React from "react";
 import { useForm } from "react-hook-form";
 import {
     OAuthWithAppleBtn,
@@ -7,10 +10,6 @@ import {
     OAuthWithLinkedinBtn
 } from "../OAuthBtns";
 import { OAuthType } from "../OAuthBtns/types";
-import { useMutation } from "@tanstack/react-query";
-import { GoogleOAuthProvider } from "@react-oauth/google";
-import { useAuth } from "../context/AuthContext";
-import axios from "axios";
 
 
 interface Field {
